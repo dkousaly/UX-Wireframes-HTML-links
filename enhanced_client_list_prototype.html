@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enhanced Client List</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .tabs { display: flex; margin-bottom: 10px; }
+        .tab { padding: 10px 20px; border: 1px solid #ccc; cursor: pointer; }
+        .tab.active { background-color: #007bff; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .filters { margin-top: 10px; }
+        .filters input, .filters select { margin-right: 10px; padding: 5px; }
+    </style>
+</head>
+<body>
+
+<h2>Client List by Business Line</h2>
+
+<div class="tabs">
+    <div class="tab active" onclick="showTab('commercial')">Commercial</div>
+    <div class="tab" onclick="showTab('medicare')">Medicare</div>
+    <div class="tab" onclick="showTab('medicaid')">Medicaid</div>
+</div>
+
+<div class="filters">
+    <input type="text" id="searchInput" placeholder="Search by Client Name" onkeyup="filterTable()">
+    <select id="statusFilter" onchange="filterTable()">
+        <option value="">All Statuses</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+    </select>
+    <select id="typeFilter" onchange="filterTable()">
+        <option value="">All Types</option>
+        <option value="Health Plan">Health Plan</option>
+        <option value="PBM">PBM</option>
+    </select>
+</div>
+
+<div id="commercial" class="tab-content active">
+    <table id="clientTable">
+        <thead>
+            <tr>
+                <th>Client Name</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Effective Date</th>
+                <th>Account Manager(s)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Alpha Health</td>
+                <td>Active</td>
+                <td>Health Plan</td>
+                <td>2021-01-01</td>
+                <td>Jane Doe</td>
+            </tr>
+            <tr>
+                <td>BetaRx</td>
+                <td>Inactive</td>
+                <td>PBM</td>
+                <td>2020-06-15</td>
+                <td>John Smith</td>
+            </tr>
+            <tr>
+                <td>CareWell</td>
+                <td>Active</td>
+                <td>PBM</td>
+                <td>2022-03-10</td>
+                <td>Emily Clark</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="medicare" class="tab-content">
+    <p>Medicare client data goes here...</p>
+</div>
+
+<div id="medicaid" class="tab-content">
+    <p>Medicaid client data goes here...</p>
+</div>
+
+<script>
+function showTab(tabId) {
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    document.querySelector('.tab[onclick="showTab(\'' + tabId + '\')"]').classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+}
+
+function filterTable() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const status = document.getElementById('statusFilter').value;
+    const type = document.getElementById('typeFilter').value;
+    const rows = document.querySelectorAll('#clientTable tbody tr');
+
+    rows.forEach(row => {
+        const cells = row.getElementsByTagName('td');
+        const name = cells[0].textContent.toLowerCase();
+        const rowStatus = cells[1].textContent;
+        const rowType = cells[2].textContent;
+
+        const matchesSearch = name.includes(search);
+        const matchesStatus = !status || rowStatus === status;
+        const matchesType = !type || rowType === type;
+
+        row.style.display = (matchesSearch && matchesStatus && matchesType) ? '' : 'none';
+    });
+}
+</script>
+
+</body>
+</html>
